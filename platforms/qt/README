@@ -1,0 +1,33 @@
+README for v3dfx-base [PLATFORM - QT] class
+================================================================
+
+INTRODUCTION:
+
+This implementation exposes video streaming functionality 
+via SGX GPU, wrapped in a Qt widget
+
+This implementation provides V3dfxGLWidget in libv3dfx_qt.so, 
+that can be used by other Qt applications.
+
+DEPENDENCIES:
+
+=> Qt built with -opengl es2 option
+=> v3dfx base-class should have been built (v3dfx-base.a)
+=> TI Graphics SDK with imgstream and/or eglimage extension support
+
+TESTING:
+
+==> Tested on Qt4.8 QWS, on DM3730 EVM
+
+STEPS:
+
+1. Update v3dfx_qt.pro as required (paths)
+
+2. Use qmake to generate the Qt makefile for this project, as below
+
+~/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/bin/qmake -o Makefile v3dfx_qt.pro
+
+3. make && make install
+
+4. Test this using qt-v3dfx-base-test (under /test/platforms/qt)
+

@@ -1,0 +1,39 @@
+Base classes for v3dfx with unified backend support for eglimage and imgstream. Refactoring work in progress.
+
+
+REQUIREMENTS:
+- Graphics SDK later than 4.05.xx.xx
+- Platform that supports a method to allocate contiguous bufferrs (preferably but not required in eglimage case)
+
+BUILD STEPS:
+XXXXgcc -I/<>/Graphics_SDK_4_05_00_03/include/OGLES2 -I/<>/Graphics_SDK_4_05_00_03/GFX_Linux_KM/include4 main_v3dfx_imgstream.cpp -lGL -lEGL -o sgxperf_test20
+
+EXECUTION STEPS:
+Boot steps - allow for CMEM
+setenv bootargs 'console=ttyO0,115200n8 mem=99M@0x80000000 mem=103M@0x89900000 root=/dev/mmcblk0p2 rw rootfstype=ext3 rootdelay=1 init=/init ip=dhcp vram=8M omapfb.vram=0:8M'
+mmc init;fatload mmc 0 82000000 uImage;bootm 0x82000000
+
+Assuming filesystem with Graphics SDK installed, and with v3dfx-base-test.
+
+> insmod cmemk.ko allowOverlap=1 phys_start=0x86300000 phys_end=0x871fffff pools=16x1500,2x2048,2x5120,18x16384,1x110000,8x131072,1x150000,2x1048576,4x1843200,1x3670016
+
+For imgstream only
+> insmod bufferclass_ti.ko
+
+> cd v3dfx-base/test/eglimage or v3dfx-base/test/imgstream
+> ./v3fdx-base-test-eglimage or ./v3dfx-base-test-imgstream
+
+For test8:
+This should produce a plain colour matching the colour set in test8_init_texture_streaming_userptr. In the current tag, it should be green (0 in YUV)
+
+For test20 with v3dfx-base: Should produce a changing colour pattern
+
+Feb 2012:
+- Code added for exposing an uniform API for different backends. Added tests.
+- Validated with older test8 from sgxperf to check flow
+- Todo validation of eglimage and imgstream
+
+Feb 2012:
+- Validated imgstream
+- Created Qt template
+
