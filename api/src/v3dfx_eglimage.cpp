@@ -73,7 +73,7 @@ int TISGXStreamEGLIMAGEDevice::init(
 int TISGXStreamEGLIMAGEDevice::destroy()
 {
 	//TODO
-#if 1 //Use new header
+#ifdef _ENABLE_EGLIMAGE //Use new header
 	for(int bcount = 0;bcount < maxBufferCount;bcount ++)
 	{
 		glDeleteTextures(1, &eglImageTextureObjectIds[bcount]);
@@ -87,7 +87,7 @@ int TISGXStreamEGLIMAGEDevice::initialise_eglimage_gl(unsigned long *paArray)
 {
 	int paCount = 0;
 
-#if 1 //TODO - use new header in SDK
+#ifdef _ENABLE_EGLIMAGE //TODO - use new header in SDK
 	unsigned int newTexObjectId = 0;
 
 	PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR =
@@ -137,7 +137,7 @@ int TISGXStreamEGLIMAGEDevice::initialise_eglimage_gl(unsigned long *paArray)
 
 int TISGXStreamEGLIMAGEDevice::qTexImage2DBuf(void* fullBufPhyAddr)
 {
-#if 0 //TODO - use new header in SDK
+#ifdef _ENABLE_EGLIMAGE //TODO - use new header in SDK
 	//Get bufferindex from PhyAddr
 	//bufferIndex = get_buffer_index_from_pa(fullBufPhyAddr);
 	glBindTexture(GL_TEXTURE_EXTERNAL_OES, eglImageTextureObjectIds[currBufferIndex]);

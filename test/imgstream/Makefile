@@ -1,5 +1,4 @@
 # Makefile to build v3dfx-base-test-imgstream
-# part of https://gitorious.org/v3dfx-base
 # Invoke as below
 #   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_05_00_03/ make
 # prabu@ti.com 2012
@@ -13,8 +12,8 @@ PLAT_CPP = $(CROSS_COMPILE)g++
 PLAT_AR  = $(CROSS_COMPILE)ar
 
 ENABLE_CMEM=1
-CMEM_PATH = /home/prabindh/work1/cmem/cmem
-CMEM_LIBDIR = /home/prabindh/work1/cmem/cmem/lib
+CMEM_PATH = /home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linuxutils_2_26_02_05/packages/ti/sdo/linuxutils/cmem
+CMEM_LIBDIR = $(CMEM_PATH)/lib
 
 COMMON_INCLUDES := $(addprefix -I, \
 		$(GFXSDKDIR)/GFX_Linux_KM/services4/3rdparty/bufferclass_ti \

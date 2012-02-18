@@ -1,5 +1,4 @@
 # Makefile to build v3dfx-base.a core library (static)
-# part of https://gitorious.org/v3dfx-base
 # Invoke as below
 #   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_05_00_03/ make
 # prabu@ti.com 2012
@@ -19,6 +18,9 @@ COMMON_INCLUDES := $(addprefix -I, \
 		../include )
 AR_FLAGS := rcs
 CC_FLAGS := -Wall -DRELEASE -O2 $(COMMON_INCLUDES)
+
+
+_ENABLE_EGLIMAGE := 0
 
 
 API_CPP_FILES := $(wildcard ../src/*.cpp)
