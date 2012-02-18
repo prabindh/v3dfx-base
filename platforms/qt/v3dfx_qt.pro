@@ -2,10 +2,13 @@
 # *   Preliminary Qt implementation for v3dfxbase
 #****************************************************************************
 
+VERSION = 0.1
 
 TEMPLATE = lib
 TARGET = v3dfxqt
 CONFIG += dll warn_on
+
+HEADERS += v3dfx_qt.h
 
 QT += opengl
 

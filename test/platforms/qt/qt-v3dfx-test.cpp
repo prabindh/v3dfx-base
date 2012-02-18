@@ -41,17 +41,20 @@
 
 #include <QGraphicsScene>
 #include <QPainter>
-
+#include <QtCore/QtDebug>
 
 VideoTestItem::VideoTestItem()
 {
+	qWarning() << __func__ << "called";
 }
 void VideoTestItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+	qWarning() << __func__ << "called";
 }
 
 QRectF VideoTestItem::boundingRect() const
 {
-    return QRectF(-15, -50, 30, 50);
+	qWarning() << __func__ << "called";
+	return QRectF(-15, -50, 30, 50);
 }
 

@@ -39,9 +39,10 @@
 
 #include <QGLWidget>
 
-class V3dfxGLWidget : public QGLWidget {
+class V3dfxGLWidget;
 
-    Q_OBJECT
+class V3dfxGLWidget : public QGLWidget {
+Q_OBJECT
 public:
     V3dfxGLWidget(QWidget *parent = 0);
     ~V3dfxGLWidget();

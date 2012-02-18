@@ -36,13 +36,16 @@
  ****************************************************************************/
 
 #include "v3dfx_qt.h"
+#include <QtCore/QtDebug>
 
 V3dfxGLWidget::V3dfxGLWidget(QWidget *parent)
     : QGLWidget(parent)
 {
-    setAttribute(Qt::WA_PaintOnScreen);
-    setAttribute(Qt::WA_NoSystemBackground);
-    setAutoBufferSwap(false);
+	qWarning() << __func__ << "called";
+
+	setAttribute(Qt::WA_PaintOnScreen);
+	setAttribute(Qt::WA_NoSystemBackground);
+	setAutoBufferSwap(false);
 
 }
 
@@ -51,9 +54,11 @@ V3dfxGLWidget::~V3dfxGLWidget()
 }
 void V3dfxGLWidget::paintGL ()
 {
+	qWarning() << __func__ << "called";
 }
 
 void V3dfxGLWidget::initializeGL ()
 {
+	qWarning() << __func__ << "called";
 }
 

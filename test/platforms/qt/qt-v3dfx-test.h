@@ -39,6 +39,8 @@
 
 #include <QGraphicsItem>
 
+#include "v3dfx_qt.h" //Base class for video streaming extensions
+
 class VideoTestItem : public QGraphicsItem
 {
 public:
