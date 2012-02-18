@@ -1,0 +1,23 @@
+== Video Streaming using SGX ==
+
+This repository contains the below folders. Refer README in each of the folders
+
+=== api ===
+
+Contains the base implementation of the classes (framework independent)
+
+=== platforms ===
+
+Contains platform dependent classes for specific platforms (Qt, Android ...)
+
+=== test ===
+
+Test code for the base classes (framework independent, Qt, Android ...)
+
+=== documentation 
+
+Basic documentation
+
+
+-prabu@ti.com
+
