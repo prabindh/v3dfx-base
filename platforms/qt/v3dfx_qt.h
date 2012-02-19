@@ -48,6 +48,7 @@ private:
 public:
 	V3dfxGLItem(QGraphicsItem *parent = 0);
 	~V3dfxGLItem();
+	int init();
 protected:
 	//QGraphicsItem paint
 	virtual void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);

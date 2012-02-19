@@ -54,6 +54,9 @@
 #include <cmem.h> //for contiguous physical memory allocation. Always used.
 #endif //CMEM
 
+int test8_init_texture_streaming_userptr();
+void test8_deinit_texture_streaming_userptr();
+void img_stream_gl_draw(int numObjects);
 
 #ifdef _ENABLE_KNOWN_TEXTURES
 #include "sgxperf.h"

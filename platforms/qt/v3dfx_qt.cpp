@@ -39,6 +39,13 @@
 #include <QtCore/QtDebug>
 #include <QtOpenGL>
 
+extern int qt_program_setup(int testID);
+extern void qt_program_cleanup(int testID);
+extern int allocate_v3dfx_imgstream_bufs(int numbufs);
+extern void deallocate_v3dfx_imgstream_bufs();
+extern void test8();
+extern void test20();
+
 V3dfxGLItem::V3dfxGLItem(QGraphicsItem *parent)
     : QGraphicsItem(parent)
 {
@@ -51,6 +58,25 @@ V3dfxGLItem::~V3dfxGLItem()
 	qWarning() << __func__ << " destructor called";
 }
 
+int V3dfxGLItem::init()
+{
+	int err = qt_program_setup(8);
+	if(err) goto cleanup;
+
+#if 0
+	/* Regular imgstream */
+	test8();	
+#else
+	/* GL_IMG_texture_stream - via v3dfxbase */
+	allocate_v3dfx_imgstream_bufs(2); //2 buffers
+	test20();
+	deallocate_v3dfx_imgstream_bufs();
+#endif
+
+cleanup:
+	qt_program_cleanup(8);
+}
+
 void V3dfxGLItem::paint(
 	QPainter * painter, 
 	const QStyleOptionGraphicsItem * option, 
@@ -59,10 +85,10 @@ void V3dfxGLItem::paint(
 	option = 0;
 	widget = 0;
 
+	qWarning() << __func__ << "V3dfxGLItem called";
+
 	currColor += 0.01f;
 	if(currColor > 1.0f) currColor = 0;
-
-	qWarning() << __func__ << "V3dfxGLItem called";
 
 	painter->drawRect(boundingRect());
 	painter->beginNativePainting();

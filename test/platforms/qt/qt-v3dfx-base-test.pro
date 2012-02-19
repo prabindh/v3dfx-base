@@ -10,6 +10,8 @@ SOURCES += main.cpp qt-v3dfx-test.cpp
 LIBS += "-L/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/lib"
 LIBS += "-L../../../platforms/qt"
 LIBS += "-lv3dfxqt"
+LIBS += ../../../api/build/v3dfx-base.a
+
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtGui"
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtOpenGL"
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtCore"
