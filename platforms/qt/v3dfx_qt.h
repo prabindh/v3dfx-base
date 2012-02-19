@@ -45,6 +45,7 @@ class V3dfxGLItem : public QObject, public QGraphicsItem
 Q_OBJECT
 private:
 	float currColor;
+	int initialised;
 public:
 	V3dfxGLItem(QGraphicsItem *parent = 0);
 	~V3dfxGLItem();

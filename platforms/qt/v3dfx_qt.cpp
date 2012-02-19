@@ -60,7 +60,11 @@ V3dfxGLItem::~V3dfxGLItem()
 
 int V3dfxGLItem::init()
 {
-	int err = qt_program_setup(8);
+	int err;
+
+	if(initialised == 1) goto completed;
+
+	err = qt_program_setup(8);
 	if(err) goto cleanup;
 
 #if 0
@@ -75,6 +79,9 @@ int V3dfxGLItem::init()
 
 cleanup:
 	qt_program_cleanup(8);
+
+completed:
+	initialised = 1;
 }
 
 void V3dfxGLItem::paint(
@@ -86,6 +93,8 @@ void V3dfxGLItem::paint(
 	widget = 0;
 
 	qWarning() << __func__ << "V3dfxGLItem called";
+
+	init();
 
 	currColor += 0.01f;
 	if(currColor > 1.0f) currColor = 0;

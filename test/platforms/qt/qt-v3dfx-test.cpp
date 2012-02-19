@@ -48,7 +48,8 @@ VideoTestItem::VideoTestItem(QGraphicsItem *parent)
 {
 	qWarning() << __func__ << "VideoTestItem constructor called";
 
-	V3dfxGLItem::init();
+	//For testing, comment out
+	//V3dfxGLItem::init();
 
 	currTimer = new QTimer(this);
 	connect(currTimer, SIGNAL(timeout()), this, SLOT(updatePicture()));
