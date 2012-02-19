@@ -35,26 +35,31 @@
  * Contact: prabu@ti.com
  ****************************************************************************/
 
-
-
 #include "qt-v3dfx-test.h"
 
+#include <QtGui>
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QtCore/QtDebug>
+#include <QtCore/QTimer>
 
-VideoTestItem::VideoTestItem()
+VideoTestItem::VideoTestItem(QGraphicsItem *parent)
+:V3dfxGLItem(parent)
 {
-	qWarning() << __func__ << "called";
+	qWarning() << __func__ << "VideoTestItem constructor called";
+
+	currTimer = new QTimer(this);
+	connect(currTimer, SIGNAL(timeout()), this, SLOT(updatePicture()));
+	currTimer->start(1000);
 }
-void VideoTestItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void VideoTestItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *wdg)
 {
-	qWarning() << __func__ << "called";
+	qWarning() << __func__ << "VideoTestItem called";
+	V3dfxGLItem::paint(painter, item, wdg);
 }
 
-QRectF VideoTestItem::boundingRect() const
+void VideoTestItem::updatePicture()
 {
-	qWarning() << __func__ << "called";
-	return QRectF(-15, -50, 30, 50);
+	qWarning() << __func__ << "VideoTestItem called";
+	update();
 }
-

@@ -37,21 +37,20 @@
 #ifndef V3DFX_QT_H
 #define V3DFX_QT_H
 
-#include <QGLWidget>
+#include <QGraphicsItem>
+#include <QGraphicsObject>
 
-class V3dfxGLWidget;
-
-class V3dfxGLWidget : public QGLWidget {
+class V3dfxGLItem : public QObject, public QGraphicsItem
+{
 Q_OBJECT
-public:
-    V3dfxGLWidget(QWidget *parent = 0);
-    ~V3dfxGLWidget();
-public slots: 
-//    void init();
-protected:
-    void paintGL ();
-    void initializeGL ();
 private:
-
+	float currColor;
+public:
+	V3dfxGLItem(QGraphicsItem *parent = 0);
+	~V3dfxGLItem();
+protected:
+	//QGraphicsItem paint
+	virtual void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+	virtual QRectF boundingRect () const;
 };
 #endif

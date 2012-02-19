@@ -2,7 +2,7 @@
 # *   Preliminary Qt implementation for v3dfxbase
 #****************************************************************************
 
-VERSION = 0.1
+VERSION = 0.2
 
 TEMPLATE = lib
 TARGET = v3dfxqt

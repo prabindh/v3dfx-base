@@ -12,6 +12,7 @@ LIBS += "-L../../../platforms/qt"
 LIBS += "-lv3dfxqt"
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtGui"
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtOpenGL"
+INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include/QtCore"
 INCLUDEPATH += "/home/prabindh/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/include"
 INCLUDEPATH += "../../../platforms/qt"
 

@@ -41,14 +41,18 @@
 
 #include "v3dfx_qt.h" //Base class for video streaming extensions
 
-class VideoTestItem : public QGraphicsItem
+class VideoTestItem : public V3dfxGLItem
 {
-public:
-    VideoTestItem();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
-    QRectF boundingRect() const;
+Q_OBJECT
 private:
+	QTimer *currTimer;
+public:
+	VideoTestItem(QGraphicsItem *parent = 0);
+public slots:
+	void updatePicture();
+protected:
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+	       QWidget *widget);
 };
 
 #endif

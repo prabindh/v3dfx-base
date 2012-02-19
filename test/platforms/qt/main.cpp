@@ -34,40 +34,33 @@
  *
  * Contact: prabu@ti.com
  ****************************************************************************/
-
-#include "v3dfx_qt.h"
 #include "qt-v3dfx-test.h"
 
 #include <QtGui>
+#include <QtOpenGL>
+
+VideoTestItem* videoTestItem;
 
 int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 
 	QGraphicsScene scene;
-	scene.setSceneRect(-300, -300, 600, 600);
+	scene.setSceneRect(-150, -300, 650, 650);
 
-	scene.setItemIndexMethod(QGraphicsScene::NoIndex);
-
-	VideoTestItem *videoTestItem = new VideoTestItem;
+	videoTestItem = new VideoTestItem;
 	scene.addItem(videoTestItem);
 
 	QGraphicsView view(&scene);
-	view.setRenderHint(QPainter::Antialiasing);
 
-	view.setCacheMode(QGraphicsView::CacheBackground);
-	view.setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	view.setDragMode(QGraphicsView::ScrollHandDrag);
-
-	view.setWindowTitle(QT_TRANSLATE_NOOP(QGraphicsView, "qt-v3dfx-base-test"));
+	view.setWindowTitle("qt-v3dfx-base-test");
 	view.resize(256, 256);
 
-	//Use the magic
-	view.setViewport(new V3dfxGLWidget(0));
+	//TODO
+	view.setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)) );
 
 	view.show();
 
 	return app.exec();
 }
-
 

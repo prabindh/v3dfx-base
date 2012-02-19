@@ -37,28 +37,46 @@
 
 #include "v3dfx_qt.h"
 #include <QtCore/QtDebug>
+#include <QtOpenGL>
 
-V3dfxGLWidget::V3dfxGLWidget(QWidget *parent)
-    : QGLWidget(parent)
+V3dfxGLItem::V3dfxGLItem(QGraphicsItem *parent)
+    : QGraphicsItem(parent)
 {
-	qWarning() << __func__ << "called";
-
-	setAttribute(Qt::WA_PaintOnScreen);
-	setAttribute(Qt::WA_NoSystemBackground);
-	setAutoBufferSwap(false);
-
+	qWarning() << __func__ << "constructor called";
+	currColor = 0;
 }
 
-V3dfxGLWidget::~V3dfxGLWidget()
+V3dfxGLItem::~V3dfxGLItem()
 {
-}
-void V3dfxGLWidget::paintGL ()
-{
-	qWarning() << __func__ << "called";
+	qWarning() << __func__ << " destructor called";
 }
 
-void V3dfxGLWidget::initializeGL ()
+void V3dfxGLItem::paint(
+	QPainter * painter, 
+	const QStyleOptionGraphicsItem * option, 
+	QWidget * widget = 0)
 {
-	qWarning() << __func__ << "called";
+	option = 0;
+	widget = 0;
+
+	currColor += 0.01f;
+	if(currColor > 1.0f) currColor = 0;
+
+	qWarning() << __func__ << "V3dfxGLItem called";
+
+	painter->drawRect(boundingRect());
+	painter->beginNativePainting();
+
+	glClearColor(currColor, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	 
+	painter->endNativePainting();
+}
+
+
+QRectF V3dfxGLItem::boundingRect () const
+{
+	qWarning() << __func__ << "V3dfxGLItem called";
+	return QRectF(20,20,256, 256);
 }
 
