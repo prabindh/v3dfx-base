@@ -15,6 +15,34 @@ DEPENDENCIES:
 => v3dfx base-class should have been built (v3dfx-base.a)
 => V3dfxGLWidget should be built (/platforms/qt)
 
+STATUS:
+
+a) with the QGraphicsItem base class, with a QGLWidget set as base class to the GraphicsScene, below errors - ie, after first draw, glerror - suspecting program context switches.
+About to BCIOSET_BUFFERADDR 86f62000                                            
+Completed BCIOSET_BUFFERADDR 86f62000                                           
+About to BCIOSET_BUFFERADDR 86fa2000                                            
+Completed BCIOSET_BUFFERADDR 86fa2000                                           
+glgeterror after q = 0                                                          
+glgeterror after draw = 0                                                       
+updatePicture VideoTestItem called                                              
+boundingRect V3dfxGLItem called                                                 
+boundingRect V3dfxGLItem called                                                 
+boundingRect V3dfxGLItem called                                                 
+paint VideoTestItem called                                                      
+paint V3dfxGLItem called                                                        
+boundingRect V3dfxGLItem called                                                 
+init 4                                                                          
+currAddress in test20_process_one = 45d35000                                    
+About to BCIOSET_BUFFERADDR 86f62000                                            
+Completed BCIOSET_BUFFERADDR 86f62000                                           
+About to BCIOSET_BUFFERADDR 86fa2000                                            
+Completed BCIOSET_BUFFERADDR 86fa2000                                           
+glgeterror after q = 0                                                          
+glgeterror after draw = 502                                          
+
+b) with QGLWidget base class directly, work ongoing
+
+
 TESTING:
 
 ==> Tested on Qt4.8 QWS, on DM3730 EVM

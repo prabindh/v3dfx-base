@@ -143,6 +143,7 @@ public:
 	virtual int load_v_shader(char const* vshader);
 	virtual int load_f_shader(char const* fshader);
 	virtual int load_program();
+	int use_program(); /*! Call when mixing programs */
 	int unload_shader_program();
 };
 

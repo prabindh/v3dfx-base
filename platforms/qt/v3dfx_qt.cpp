@@ -44,7 +44,14 @@ extern void qt_program_cleanup(int testID);
 extern int allocate_v3dfx_imgstream_bufs(int numbufs);
 extern void deallocate_v3dfx_imgstream_bufs();
 extern void test8();
-extern void test20();
+extern void test20_init();
+extern void test20_process_one(int currIteration);
+extern void test20_deinit();
+
+
+static int curritercount = 0;
+
+#define MAX_ITER_COUNT 10
 
 V3dfxGLItem::V3dfxGLItem(QGraphicsItem *parent)
     : QGraphicsItem(parent)
@@ -62,26 +69,41 @@ int V3dfxGLItem::init()
 {
 	int err;
 
-	if(initialised == 1) goto completed;
+	if(curritercount >= MAX_ITER_COUNT) goto completed; //do it only for MAX_ITER_COUNT times
 
-	err = qt_program_setup(8);
-	if(err) goto cleanup;
+	if(initialised == 0 && curritercount == 0) 
+	{
+		err = qt_program_setup(8);
+	qWarning() << __func__ << "1";
+		if(err) 
+		{
+			qt_program_cleanup(8);		
+			goto completed;
+		}
+		/* GL_IMG_texture_stream - via v3dfxbase */
+		allocate_v3dfx_imgstream_bufs(2); //2 buffers
+	qWarning() << __func__ << "2";
+		test20_init();
+	qWarning() << __func__ << "3";
+		initialised = 1;
+	}
 
-#if 0
-	/* Regular imgstream */
-	test8();	
-#else
-	/* GL_IMG_texture_stream - via v3dfxbase */
-	allocate_v3dfx_imgstream_bufs(2); //2 buffers
-	test20();
-	deallocate_v3dfx_imgstream_bufs();
-#endif
-
-cleanup:
-	qt_program_cleanup(8);
-
+	if(curritercount < MAX_ITER_COUNT)
+	{
+	qWarning() << __func__ << "4";
+		test20_process_one(curritercount);
+		curritercount ++;
+		//swap buffers will be done by framework itself after paint call
+	}
+	else
+	{
+		test20_deinit();
+		deallocate_v3dfx_imgstream_bufs();
+		qt_program_cleanup(8);
+		return 0;
+	}
 completed:
-	initialised = 1;
+	return 0;
 }
 
 void V3dfxGLItem::paint(
@@ -94,17 +116,19 @@ void V3dfxGLItem::paint(
 
 	qWarning() << __func__ << "V3dfxGLItem called";
 
-	init();
-
 	currColor += 0.01f;
 	if(currColor > 1.0f) currColor = 0;
 
 	painter->drawRect(boundingRect());
 	painter->beginNativePainting();
 
+	//All glcode has to be inside this block 
 	glClearColor(currColor, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	 
+
+	init();
+
+	//End gl code	 
 	painter->endNativePainting();
 }
 

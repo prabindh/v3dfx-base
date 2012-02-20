@@ -43,6 +43,10 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QTimer>
 
+#define MAX_ITER_COUNT 11
+
+static int numTimes = 0;
+
 VideoTestItem::VideoTestItem(QGraphicsItem *parent)
 :V3dfxGLItem(parent)
 {
@@ -65,4 +69,5 @@ void VideoTestItem::updatePicture()
 {
 	qWarning() << __func__ << "VideoTestItem called";
 	update();
+	if(numTimes ++ > MAX_ITER_COUNT) QApplication::quit();
 }

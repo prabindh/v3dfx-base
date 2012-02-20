@@ -163,6 +163,12 @@ int TISGXStreamTexBase::load_program()
 	LOG_V3DFX_BASE("successfully loaded default program\n");
 	return 0;
 }
+
+int TISGXStreamTexBase::use_program()
+{
+ 	glUseProgram(uiProgramObject);
+}
+
 int TISGXStreamTexBase::unload_shader_program()
 {
 	// Frees the OpenGL handles for the program and the 2 shaders
