@@ -68,6 +68,12 @@ int TISGXStreamTexBase::get_uniform_location(char const* uniformname)
 {
 	return(glGetUniformLocation(uiProgramObject, uniformname));
 }
+//TODO
+int TISGXStreamTexBase::get_attrib_location(char const* attributename)
+{
+	return -1;
+}
+
 int TISGXStreamTexBase::load_v_shader(char const* vshader)
 {
 	bool bShaderCompiled;

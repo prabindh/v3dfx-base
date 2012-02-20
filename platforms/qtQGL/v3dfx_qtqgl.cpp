@@ -46,10 +46,9 @@ V3dfxGLWidget::V3dfxGLWidget(QGLWidget *parent)
 	currColor = 0;
 	initialised = 0;
 
-    setAttribute(Qt::WA_PaintOnScreen);
-    setAttribute(Qt::WA_NoSystemBackground);
-    setAutoBufferSwap(false);
-
+	setAttribute(Qt::WA_PaintOnScreen);
+	setAttribute(Qt::WA_NoSystemBackground);
+	setAutoBufferSwap(false);
 }
 
 V3dfxGLWidget::~V3dfxGLWidget()
@@ -69,5 +68,100 @@ void V3dfxGLWidget::paintGL()
 	swapBuffers();
 
 }
+
+/************* Function Implementations ******************/
+int V3dfxGLWidget::initV3dFx(
+		int streamingType,/*! IMGSTREAM, EGLIMAGE */
+		void* attrib, /* Attribute structure based on type */
+		int deviceId, /* Device # applicable to IMGSTREAM */
+		unsigned long *paArray /*! Array of buffers */
+		)
+{
+	int err = 0;
+	//TODO define enums
+	if(streamingType == 0) //imgstream
+	{
+		deviceClass = new TISGXStreamIMGSTREAMDevice();
+		texClass = new TISGXStreamTexIMGSTREAM();		
+	}
+	else if (streamingType == 1)
+	{
+		deviceClass = new TISGXStreamEGLIMAGEDevice();
+		texClass = new TISGXStreamTexEGLIMAGE();	
+	}
+	else 
+	{
+		return 1;
+	}
+	if(!deviceClass || !texClass)
+	{
+		return 2;
+	}
+
+	currDeviceType = streamingType;
+	currDeviceId = deviceId;
+
+	err = deviceClass->init(attrib, deviceId, paArray);
+	if(err)
+	{
+		return err;
+	}
+	err = texClass->init(deviceId);
+	if(err)
+	{
+		return err;
+	}
+}
+
+int V3dfxGLWidget::qTexImage2DBuf(void* fullBufPhyAddrArray)
+{
+	return deviceClass->qTexImage2DBuf(fullBufPhyAddrArray);
+}
+void V3dfxGLWidget::signal_draw(int texIndex)
+{
+	return deviceClass->signal_draw(texIndex);
+}
+
+int V3dfxGLWidget::dqTexImage2DBuf(void* freeBufPhyAddrArray)
+{
+	return deviceClass->dqTexImage2DBuf(freeBufPhyAddrArray);
+}
+int V3dfxGLWidget::load_v_shader(char const* vshader)
+{ 
+	return texClass->load_v_shader(vshader);
+}
+int V3dfxGLWidget::load_f_shader(char const* fshader)
+{ 
+	return texClass->load_f_shader(fshader);
+}
+int V3dfxGLWidget::load_program()
+{
+	return texClass->load_program(); 
+}
+int V3dfxGLWidget::use_program()
+{ 
+	texClass->use_program();
+}
+
+int V3dfxGLWidget::release_program()
+{ 
+	return texClass->release_program();
+}
+
+int V3dfxGLWidget::get_attrib_location(char const* attribname)
+{ 
+	return texClass->get_attrib_location(attribname);
+}
+int V3dfxGLWidget::get_uniform_location(char const* uniformname)
+{ 
+	return texClass->get_uniform_location(uniformname);
+}
+int V3dfxGLWidget::destroy()
+{ 
+	return deviceClass->destroy();
+}
+
+
+
 
 

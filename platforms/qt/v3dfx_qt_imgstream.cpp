@@ -45,32 +45,22 @@ extern void* virtualAddress;
 extern unsigned int *textureData;
 extern int inPixelFormat;
 
+
+
 #define TEXCOORD_ARRAY 1
 /********************************************************************
 TEST20 - with v3dfxbase classes
 ********************************************************************/
-TISGXStreamTexIMGSTREAM* texClass;
-TISGXStreamIMGSTREAMDevice* deviceClass;
-imgstream_device_attributes tempAttrib = {inTextureWidth, inTextureHeight, 2, 
-				inTextureWidth*inTextureHeight*2,
-				PVRSRV_PIXEL_FORMAT_UYVY, 
-				2	//2 //2 buffers used
-				};
-int lastDeviceClass = 0;
+extern unsigned long paArray[];
+extern unsigned long freeArray[];  
 
-//FOR TEST ONLY - will really come from CMEM_getPhysAddr or similar
-unsigned long paArray[] = {0, 0};
-unsigned long freeArray[] = {0, 0, 0, 0};  
 char* currAddress = 0;
 float *pVertexArray, *pTexCoordArray;
 
-void test20_init()
+void test20_init_1()
 {
 	int matrixLocation;
 	//initialise gl vertices
-	static GLfloat texcoord_img[] = 
-        {0,0, 1,0, 0,1, 1,1};
-
 	currAddress = (char*)virtualAddress;
 	//Buff 0
 	for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
@@ -82,18 +72,15 @@ void test20_init()
 	paArray[0] = physicalAddress;
 	paArray[1] = physicalAddress + (inTextureWidth*inTextureHeight*4);
 
-	deviceClass = new TISGXStreamIMGSTREAMDevice();
-	texClass = new TISGXStreamTexIMGSTREAM();
-	deviceClass->init(&tempAttrib, lastDeviceClass, paArray);
-	texClass->init(lastDeviceClass);
-	texClass->load_v_shader(NULL);
-	texClass->load_f_shader(NULL);
-	texClass->load_program();
-	matrixLocation = texClass->get_uniform_location("MVPMatrix");
-	set_mvp(matrixLocation);
+}
 
+//Post v3dfx creation - initialise the rest of the general gl things - ex what is needed 
+// to be drawn - in this case, a full screen textured quad
+void test20_init_2()
+{
 
-
+	static GLfloat texcoord_img[] = 
+        {0,0, 1,0, 0,1, 1,1};
 
 
 	common_init_gl_vertices(inNumberOfObjectsPerSide, &pVertexArray);
@@ -113,52 +100,46 @@ void test20_init()
 	//check
 	currAddress = (char*)virtualAddress;
 	printf("currAddress in %s = %x\n", __func__, currAddress);
-
-	texClass->release_program();
 }
 
-void test20_process_one(int currIteration)
+
+//Prepare the buffers etc
+void test20_process_one_prepare(int currIteration)
 {
 	currAddress = (char*)virtualAddress;
 
-	texClass->use_program(); 
 	//MUST
 	glEnableVertexAttribArray(VERTEX_ARRAY);
 	glEnableVertexAttribArray(TEXCOORD_ARRAY);
 
 
 	//printf("currAddress in %s = %x\n", __func__, currAddress);
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	common_init_gl_vertices(inNumberOfObjectsPerSide, &pVertexArray);
 	common_init_gl_texcoords(inNumberOfObjectsPerSide, &pTexCoordArray);
 
-		paArray[0] = physicalAddress;
-		paArray[1] = physicalAddress + (inTextureWidth*inTextureHeight*4);
-		deviceClass->qTexImage2DBuf(paArray);
+	paArray[0] = physicalAddress;
+	paArray[1] = physicalAddress + (inTextureWidth*inTextureHeight*4);
+}
 
-		printf("glgeterror after q = %x\n", glGetError());
-
-		img_stream_gl_draw(inNumberOfObjectsPerSide);
-		//deviceClass->signal_draw(0); //only one buffer
-		//deviceClass->dqTexImage2DBuf(freeArray);
+//Actual app drawing code
+void test20_process_one_draw(int currIteration)
+{
+	img_stream_gl_draw(inNumberOfObjectsPerSide);
+	//deviceClass->signal_draw(0); //only one buffer
+	//deviceClass->dqTexImage2DBuf(freeArray);
 
 	common_deinit_gl_vertices(pVertexArray);
 	common_deinit_gl_texcoords(pTexCoordArray);
 
+	printf("glgeterror after draw = %x\n", glGetError());
 
-
-		printf("glgeterror after draw = %x\n", glGetError());
-
-		//Try changing data
-		for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
-			currAddress[i] = (currIteration*i) & 0xFF;
-		for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
-			currAddress[i + inTextureWidth*inTextureHeight*4] = 
-					(currIteration*i *5) & 0xFF;					
-	}
-
-	texClass->release_program();
+	//Try changing data
+	for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
+		currAddress[i] = (currIteration*i) & 0xFF;
+	for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
+		currAddress[i + inTextureWidth*inTextureHeight*4] = 
+				(currIteration*i *5) & 0xFF;					
 	//MUST
 	glDisableVertexAttribArray(VERTEX_ARRAY);
 	glDisableVertexAttribArray(TEXCOORD_ARRAY);
@@ -171,8 +152,6 @@ void test20_deinit()
 {
 	common_deinit_gl_vertices(pVertexArray);
 	common_deinit_gl_texcoords(pTexCoordArray);
-
-	deviceClass->destroy();
 }
 
 int qt_program_setup(int testID)

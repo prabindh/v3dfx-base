@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Headers for v3dfxbase
+ *   Headers for v3dfxbase (QGLWidget based implementation)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -39,18 +39,43 @@
 
 #include <QtOpenGL>
 
+#include "v3dfxbase.h"
+#include "v3dfx_imgstream.h"
+#include "v3dfx_eglimage.h"
+
 class V3dfxGLWidget : public QGLWidget
 {
 Q_OBJECT
 private:
 	float currColor;
 	int initialised;
+	int currDeviceType;
+	int currDeviceId;
+	TISGXStreamDeviceBase* deviceClass;
+	TISGXStreamTexBase* texClass;
 public:
 	V3dfxGLWidget(QGLWidget *parent = 0);
 	~V3dfxGLWidget();
-	int init();
+	int initV3dFx(
+		int streamingType,/*! IMGSTREAM, EGLIMAGE */
+		void* attrib, /* Attribute structure based on type */
+		int deviceId, /* Device # applicable to IMGSTREAM */
+		unsigned long *paArray /*! Array of buffers */
+		);
+	int qTexImage2DBuf(void* fullBufPhyAddrArray);
+	void signal_draw(int texIndex);
+	int dqTexImage2DBuf(void* freeBufPhyAddrArray);
+	int load_v_shader(char const* vshader);
+	int load_f_shader(char const* fshader);
+	int load_program(); /*! link and load program */
+	int use_program(); /*! Binds default program */
+	int release_program();/*! Unbinds default program */
+	int get_attrib_location(char const* attribname);
+	int get_uniform_location(char const* uniformname);
+	int destroy();
 protected:
     void paintGL ();
     void initializeGL ();
 };
 #endif
+
