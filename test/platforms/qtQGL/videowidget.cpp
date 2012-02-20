@@ -43,9 +43,21 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QTimer>
 
-#define MAX_ITER_COUNT 11
 
-static int numTimes = 0;
+static int curritercount = 0;
+
+extern int qt_program_setup(int testID);
+extern void qt_program_cleanup(int testID);
+extern int allocate_v3dfx_imgstream_bufs(int numbufs);
+extern void deallocate_v3dfx_imgstream_bufs();
+extern void test8();
+extern void test20_init();
+extern void test20_process_one(int currIteration);
+extern void test20_deinit();
+
+extern void test3_init();
+extern void test3_process_one(int currIteration);
+extern void test3_deinit();
 
 VideoWidget::VideoWidget(QGLWidget *parent)
 :V3dfxGLWidget(parent)
@@ -60,22 +72,83 @@ VideoWidget::VideoWidget(QGLWidget *parent)
 	currTimer->start(1000);
 }
 
+//TODO separate application code and base code from init
+int VideoWidget::init()
+{
+	int err;
+
+	qWarning() << __func__ << "VideoWidget called";
+	qWarning() << curritercount;
+
+#if 1
+	err = qt_program_setup(8);
+	qWarning() << __func__ << "1";
+	if(err) 
+	{
+		qt_program_cleanup(8);		
+		goto completed;
+	}
+	/* GL_IMG_texture_stream - via v3dfxbase */
+	allocate_v3dfx_imgstream_bufs(2); //2 buffers
+	qWarning() << __func__ << "2";
+	test20_init();
+	qWarning() << __func__ << "3";
+#else
+	test3_init();
+#endif
+	qWarning() << __func__ << "init complete";
+
+completed:
+	return 0;
+}
+
+void VideoWidget::deinit()
+{
+		qWarning() << __func__ << "5 deinit";
+#if 1
+		test20_deinit();
+		deallocate_v3dfx_imgstream_bufs();
+		qt_program_cleanup(8);
+#else
+		test3_deinit();
+#endif
+}
+
+
 void VideoWidget::updateGL()
 {
 	qWarning() << __func__ << "VideoWidget called";
+	qWarning() << __func__ << "4, with iteration #" << curritercount;
+	curritercount ++;
 	V3dfxGLWidget::updateGL();
-	if(numTimes ++ > MAX_ITER_COUNT) QApplication::quit();
 }
 
 void VideoWidget::paintGL()
 {
 	qWarning() << __func__ << "VideoWidget called";
+	QString frameString;
+	QTextStream(&frameString) << "frame count = " << curritercount;
+
+	QPainter painter;
+	painter.begin(this);
+	painter.beginNativePainting();
+
+#if 1
+	test20_process_one(curritercount);
+#else
+	test3_process_one(curritercount);
+#endif
+
+	painter.drawText(20, 40, frameString);
+	painter.end();
+    
 	V3dfxGLWidget::paintGL();
 }
 
 void VideoWidget::initializeGL()
 {
 	qWarning() << __func__ << "VideoWidget called";
+	init();
 	V3dfxGLWidget::initializeGL();
 }
 

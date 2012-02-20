@@ -46,6 +46,8 @@ private:
 	QTimer *currTimer;
 public:
 	VideoWidget(QGLWidget *parent = 0);
+	void deinit();
+	int init();
 public slots:
     void updateGL();
 protected:

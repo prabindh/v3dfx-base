@@ -39,25 +39,6 @@
 #include <QtCore/QtDebug>
 #include <QtOpenGL>
 
-extern int qt_program_setup(int testID);
-extern void qt_program_cleanup(int testID);
-extern int allocate_v3dfx_imgstream_bufs(int numbufs);
-extern void deallocate_v3dfx_imgstream_bufs();
-extern void test8();
-extern void test20_init();
-extern void test20_process_one(int currIteration);
-extern void test20_deinit();
-
-extern void test3_init();
-extern void test3_process_one(int currIteration);
-extern void test3_deinit();
-
-
-
-static int curritercount = 0;
-
-#define MAX_ITER_COUNT 50
-
 V3dfxGLWidget::V3dfxGLWidget(QGLWidget *parent)
     : QGLWidget(parent)
 {
@@ -76,108 +57,16 @@ V3dfxGLWidget::~V3dfxGLWidget()
 	qWarning() << __func__ << " destructor called";
 }
 
-//TODO separate application code and base code from init
-int V3dfxGLWidget::init()
-{
-	int err;
-
-	qWarning() << __func__ << "V3dfxGLWidget called";
-	qWarning() << curritercount;
-
-	if(curritercount >= MAX_ITER_COUNT) goto completed; //do it only for MAX_ITER_COUNT times
-
-	if(initialised == 0) 
-	{
-#if 1
-		err = qt_program_setup(8);
-		qWarning() << __func__ << "1";
-		if(err) 
-		{
-			qt_program_cleanup(8);		
-			goto completed;
-		}
-		/* GL_IMG_texture_stream - via v3dfxbase */
-		allocate_v3dfx_imgstream_bufs(2); //2 buffers
-		qWarning() << __func__ << "2";
-		test20_init();
-		qWarning() << __func__ << "3";
-		initialised = 1;
-#else
-		test3_init();
-		initialised = 1;
-#endif
-		qWarning() << __func__ << "init complete, going to complete";
-		goto completed; //do not do rendering in init (initializeGL), only inside paintGL
-	}
-
-	if(curritercount < MAX_ITER_COUNT)
-	{
-		qWarning() << __func__ << "4, with iteration #" << curritercount;
-
-#if 1
-		test20_process_one(curritercount);
-
-#else
-		test3_process_one(curritercount);
-#endif
-
-		curritercount ++;
-		//swap buffers will be done by framework itself after paint call
-	}
-	else
-	{
-		qWarning() << __func__ << "5 deinit";
-#if 1
-		test20_deinit();
-		deallocate_v3dfx_imgstream_bufs();
-		qt_program_cleanup(8);
-#else
-		test3_deinit();
-#endif
-		return 0;
-	}
-completed:
-	return 0;
-}
-
 void V3dfxGLWidget::initializeGL()
 {
 	qWarning() << __func__ << "V3dfxGLWidget called";
-	glClearColor(currColor, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	init();
 }
 
 void V3dfxGLWidget::paintGL()
 {
 	qWarning() << __func__ << "V3dfxGLWidget called";
 
-	QString frameString;
-	QTextStream(&frameString) << "frame count = " << curritercount << " Red = " << currColor;
-
-	QPainter painter;
-	painter.begin(this);
-
-	painter.beginNativePainting();
-
-
-	currColor += 0.01f;
-	if(currColor > 1.0f) currColor = 0;
-
-	glClearColor(currColor, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	//TODO - remove this init - which also does process !!
-	//separate application code and base code from init
-	init();
-
-    painter.drawText(20, 40, frameString);
-
-
-    painter.end();
-    
-    swapBuffers();
+	swapBuffers();
 
 }
 
