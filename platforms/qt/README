@@ -6,8 +6,10 @@ INTRODUCTION:
 This implementation exposes video streaming functionality 
 via SGX GPU, wrapped in a Qt widget
 
-This implementation provides V3dfxGLWidget in libv3dfx_qt.so, 
-that can be used by other Qt applications.
+This implementation provides QGraphicsItem in libv3dfx_qt.so, 
+that can be used by other Qt applications (GraphicsView based)
+
+STATUS - not working
 
 DEPENDENCIES:
 

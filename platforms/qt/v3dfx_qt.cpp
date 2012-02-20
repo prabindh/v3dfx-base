@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Implementation for v3dfxbase
+ *   Implementation for v3dfxbase (Qt - QGLWidget based)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -35,7 +35,7 @@
  * Contact: prabu@ti.com
  ****************************************************************************/
 
-#include "v3dfx_qt.h"
+#include "v3dfx_qtqgl.h"
 #include <QtCore/QtDebug>
 #include <QtOpenGL>
 
@@ -53,19 +53,20 @@ static int curritercount = 0;
 
 #define MAX_ITER_COUNT 10
 
-V3dfxGLItem::V3dfxGLItem(QGraphicsItem *parent)
-    : QGraphicsItem(parent)
+V3dfxGLWidget::V3dfxGLWidget(QWidget *parent)
+    : QWidget(parent)
 {
 	qWarning() << __func__ << "constructor called";
 	currColor = 0;
+	initialised = 0;
 }
 
-V3dfxGLItem::~V3dfxGLItem()
+V3dfxGLWidget::~V3dfxGLWidget()
 {
 	qWarning() << __func__ << " destructor called";
 }
 
-int V3dfxGLItem::init()
+int V3dfxGLWidget::init()
 {
 	int err;
 
@@ -106,7 +107,7 @@ completed:
 	return 0;
 }
 
-void V3dfxGLItem::paint(
+void V3dfxGLWidget::paintGL(
 	QPainter * painter, 
 	const QStyleOptionGraphicsItem * option, 
 	QWidget * widget = 0)
@@ -114,7 +115,7 @@ void V3dfxGLItem::paint(
 	option = 0;
 	widget = 0;
 
-	qWarning() << __func__ << "V3dfxGLItem called";
+	qWarning() << __func__ << "V3dfxGLWidget called";
 
 	currColor += 0.01f;
 	if(currColor > 1.0f) currColor = 0;
@@ -133,9 +134,9 @@ void V3dfxGLItem::paint(
 }
 
 
-QRectF V3dfxGLItem::boundingRect () const
+QRectF V3dfxGLWidget::boundingRect () const
 {
-	qWarning() << __func__ << "V3dfxGLItem called";
+	qWarning() << __func__ << "V3dfxGLWidget called";
 	return QRectF(20,20,256, 256);
 }
 

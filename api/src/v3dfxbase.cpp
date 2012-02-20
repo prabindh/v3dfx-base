@@ -167,7 +167,15 @@ int TISGXStreamTexBase::load_program()
 int TISGXStreamTexBase::use_program()
 {
  	glUseProgram(uiProgramObject);
+	return 0;
 }
+
+int TISGXStreamTexBase::release_program()
+{
+ 	glUseProgram(0);
+	return 0;
+}
+
 
 int TISGXStreamTexBase::unload_shader_program()
 {

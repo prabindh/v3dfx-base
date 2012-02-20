@@ -206,6 +206,37 @@ void set_mvp(int matrixLocation)
 	glUniformMatrix4fv( matrixLocation, 1, GL_FALSE, mat_final);
 }
 
+/*************************************************
+* The traditional way of texturing - glteximage2d
+*************************************************/
+void add_texture(int width, int height, void* data, int pixelFormat)
+{
+	int textureType = GL_RGBA;
+	if(pixelFormat == SGXPERF_RGB565) textureType = GL_RGB;
+	else if(pixelFormat == SGXPERF_ARGB8888) textureType = GL_RGBA;
+	else if(pixelFormat == SGXPERF_BYTE8) textureType = GL_LUMINANCE;
+	else {SGX_PERF_ERR_printf("%d texture format unsupported\n", pixelFormat); exit(-1);}
+	// load the texture up
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+	//SGX_PERF_ERR_printf("\n\nTextureType=%d\n",textureType);
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		textureType,//GL_RGBA,//textureType,
+		width,
+		height,
+		0,
+		textureType,//GL_RGBA,//textureType,
+		GL_UNSIGNED_BYTE,//textureFormat,
+		data
+		);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+
 int test8_init_texture_streaming_userptr()
 {
     const GLubyte *pszGLExtensions;
@@ -715,9 +746,9 @@ void common_gl_draw(int numObjects)
 		{
 			{
 				// Create and Bind texture
-				//glGenTextures(1, &textureId0);
-				//glBindTexture(GL_TEXTURE_2D, textureId0);
-				//add_texture(inTextureWidth, inTextureHeight, textureData, inPixelFormat);
+				glGenTextures(1, &textureId0);
+				glBindTexture(GL_TEXTURE_2D, textureId0);
+				add_texture(inTextureWidth, inTextureHeight, textureData, inPixelFormat);
 				alreadyDone = 1;
 			}
 			glDrawArrays(GL_TRIANGLE_STRIP, startIndex, 4);

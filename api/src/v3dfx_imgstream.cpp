@@ -293,6 +293,7 @@ int TISGXStreamTexIMGSTREAM::load_v_shader(char const* vshader)
 int TISGXStreamTexIMGSTREAM::load_f_shader(char const* fshader)
 {
 	int err = 0;
+
 	const char* pszFragIMGTextureStreamShader = "\
 			 #ifdef GL_IMG_texture_stream2\n \
 			 #extension GL_IMG_texture_stream2 : enable \n \
