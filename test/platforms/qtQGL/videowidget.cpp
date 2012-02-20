@@ -64,9 +64,6 @@ VideoWidget::VideoWidget(QGLWidget *parent)
 {
 	qWarning() << __func__ << "VideoWidget constructor called";
 
-	//For testing, comment out
-	//V3dfxGLItem::init();
-
 	currTimer = new QTimer(this);
 	connect(currTimer, SIGNAL(timeout()), this, SLOT(updateGL()));
 	currTimer->start(1000);
@@ -90,9 +87,7 @@ int VideoWidget::init()
 	}
 	/* GL_IMG_texture_stream - via v3dfxbase */
 	allocate_v3dfx_imgstream_bufs(2); //2 buffers
-	qWarning() << __func__ << "2";
 	test20_init();
-	qWarning() << __func__ << "3";
 #else
 	test3_init();
 #endif
@@ -117,7 +112,6 @@ void VideoWidget::deinit()
 
 void VideoWidget::updateGL()
 {
-	qWarning() << __func__ << "VideoWidget called";
 	qWarning() << __func__ << "4, with iteration #" << curritercount;
 	curritercount ++;
 	V3dfxGLWidget::updateGL();

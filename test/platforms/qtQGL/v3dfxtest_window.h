@@ -42,12 +42,16 @@
 
 #include "v3dfx_qtqgl.h"
 
+#include "videowidget.h"
+
 class V3dfxTestWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
-	V3dfxGLWidget* videoWidget;
+	VideoWidget* videoWidget;
+public slots:
+	void closeWidget();
 public:
 	V3dfxTestWindow();
 

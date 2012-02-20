@@ -42,9 +42,9 @@
 
 int main( int argc, char ** argv )
 {
-    QApplication v3dfxapp( argc, argv );
-    V3dfxTestWindow v3dfxTestWindow;
-    v3dfxTestWindow.showMaximized();
+	QApplication v3dfxapp( argc, argv );
+	V3dfxTestWindow v3dfxTestWindow;
+	v3dfxTestWindow.showMaximized();
 
-    return v3dfxapp.exec();
+	return v3dfxapp.exec();
 }

@@ -36,33 +36,49 @@
  ****************************************************************************/
 
 #include "v3dfxtest_window.h"
-#include "videowidget.h"
+#include "signal.h"
 
 #include <QApplication>
 #include <QMenuBar>
 #include <QGroupBox>
 #include <QGridLayout>
 
+static void v3dfx_signal_handler(int reason);
 
 V3dfxTestWindow::V3dfxTestWindow()
 {
-    videoWidget = new VideoWidget();
+	//This widget derives from V3dfxGLWidget, and tests its functionality
+	videoWidget = new VideoWidget();
 
-    QGroupBox * groupBox = new QGroupBox(this);
-    setCentralWidget(groupBox);
+	QGroupBox * groupBox = new QGroupBox(this);
+	setCentralWidget(groupBox);
 	groupBox->setTitle("V3dfx - QtQGL Test");
 
-    QGridLayout *layout = new QGridLayout(groupBox);
+	QGridLayout *layout = new QGridLayout(groupBox);
 
-    layout->addWidget(videoWidget,1,0,8,1);
+	layout->addWidget(videoWidget,1,0,8,1);
 
-    groupBox->setLayout(layout);
+	groupBox->setLayout(layout);
 
-    QMenu *fileMenu = new QMenu("File");
-    QAction *exit = new QAction("Exit", fileMenu);
-    fileMenu->addAction(exit);
+	QMenu *fileMenu = new QMenu("File");
+	QAction *exit = new QAction("Exit", fileMenu);
+	fileMenu->addAction(exit);
 
-    menuBar()->addMenu(fileMenu);
+	menuBar()->addMenu(fileMenu);
 
-    QObject::connect(exit, SIGNAL(triggered(bool)), this, SLOT(close()));
+	signal(SIGINT, v3dfx_signal_handler);
 }
+
+void V3dfxTestWindow::closeWidget()
+{
+	videoWidget->deinit();
+	close();
+}
+
+static void v3dfx_signal_handler(int reason)
+{
+	reason = 0;
+	//Need to call closeWidget here, TODO emit/connect magic
+	exit(0);
+}
+

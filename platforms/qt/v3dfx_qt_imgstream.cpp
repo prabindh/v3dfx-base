@@ -79,31 +79,31 @@ void test20_init()
 	for(int i = 0;i < inTextureWidth*inTextureHeight*4;i ++)
 		currAddress[i+inTextureWidth*inTextureHeight*4] = 0xFF;
 
-	deviceClass = new TISGXStreamIMGSTREAMDevice();
-	texClass = new TISGXStreamTexIMGSTREAM();
-
 	paArray[0] = physicalAddress;
 	paArray[1] = physicalAddress + (inTextureWidth*inTextureHeight*4);
 
+	deviceClass = new TISGXStreamIMGSTREAMDevice();
+	texClass = new TISGXStreamTexIMGSTREAM();
 	deviceClass->init(&tempAttrib, lastDeviceClass, paArray);
 	texClass->init(lastDeviceClass);
 	texClass->load_v_shader(NULL);
 	texClass->load_f_shader(NULL);
 	texClass->load_program();
+	matrixLocation = texClass->get_uniform_location("MVPMatrix");
+	set_mvp(matrixLocation);
+
+
+
+
 
 	common_init_gl_vertices(inNumberOfObjectsPerSide, &pVertexArray);
 	common_init_gl_texcoords(inNumberOfObjectsPerSide, &pTexCoordArray);
-
-	matrixLocation = texClass->get_uniform_location("MVPMatrix");
-	set_mvp(matrixLocation);
 
 	//override the texturecoords for this extension only
 	glDisableVertexAttribArray(TEXCOORD_ARRAY);
 	glEnableVertexAttribArray(TEXCOORD_ARRAY);
 	glVertexAttribPointer(TEXCOORD_ARRAY, 2, GL_FLOAT, GL_FALSE, 
 		0, (const void*)texcoord_img);
-
-	texClass->release_program();
 
 	//MUST
 	glDisableVertexAttribArray(VERTEX_ARRAY);
@@ -114,6 +114,7 @@ void test20_init()
 	currAddress = (char*)virtualAddress;
 	printf("currAddress in %s = %x\n", __func__, currAddress);
 
+	texClass->release_program();
 }
 
 void test20_process_one(int currIteration)
