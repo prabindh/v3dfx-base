@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Headers for v3dfxbase
+ *   Headers for v3dfxbase (QGraphicsScene)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -37,22 +37,47 @@
 #ifndef V3DFX_QT_H
 #define V3DFX_QT_H
 
-#include <QGraphicsItem>
-#include <QGraphicsObject>
+#include <QGraphicsScene>
+#include "v3dfxbase.h"
+#include "v3dfx_imgstream.h"
+#include "v3dfx_eglimage.h"
 
-class V3dfxGLItem : public QObject, public QGraphicsItem
+
+
+class V3dfxGLScene : public QGraphicsScene
 {
 Q_OBJECT
 private:
 	float currColor;
 	int initialised;
+	int currDeviceType;
+	int currDeviceId;
+	TISGXStreamDeviceBase* deviceClass;
+	TISGXStreamTexBase* texClass;
 public:
-	V3dfxGLItem(QGraphicsItem *parent = 0);
-	~V3dfxGLItem();
-	int init();
+	V3dfxGLScene(QGraphicsScene *parent = 0);
+	~V3dfxGLScene();
+	int initV3dFx(
+		int streamingType,/*! IMGSTREAM, EGLIMAGE */
+		void* attrib, /* Attribute structure based on type */
+		int deviceId, /* Device # applicable to IMGSTREAM */
+		unsigned long *paArray /*! Array of buffers */
+		);
+	int qTexImage2DBuf(void* fullBufPhyAddrArray);
+	void signal_draw(int texIndex);
+	int dqTexImage2DBuf(void* freeBufPhyAddrArray);
+	int load_v_shader(char const* vshader);
+	int load_f_shader(char const* fshader);
+	int load_program(); /*! link and load program */
+	int use_program(); /*! Binds default program */
+	int release_program();/*! Unbinds default program */
+	int get_attrib_location(char const* attribname);
+	int get_uniform_location(char const* uniformname);
+	int destroy();
+
 protected:
-	//QGraphicsItem paint
-	virtual void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+	//QGraphicsScene paint
+	virtual void drawBackground ( QPainter * painter, const QRectF & rect );
 	virtual QRectF boundingRect () const;
 };
 #endif

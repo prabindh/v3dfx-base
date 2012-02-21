@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Preliminary Qt test code for v3dfxbase
+ *   Preliminary Qt test code for v3dfxbase (GraphicsScene based)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -47,10 +47,10 @@
 
 static int numTimes = 0;
 
-VideoTestItem::VideoTestItem(QGraphicsItem *parent)
-:V3dfxGLItem(parent)
+VideoTestScene::VideoTestScene(QGraphicsScene *parent)
+:V3dfxGLScene(parent)
 {
-	qWarning() << __func__ << "VideoTestItem constructor called";
+	qWarning() << __func__ << "VideoTestScene constructor called";
 
 	//For testing, comment out
 	//V3dfxGLItem::init();
@@ -59,15 +59,16 @@ VideoTestItem::VideoTestItem(QGraphicsItem *parent)
 	connect(currTimer, SIGNAL(timeout()), this, SLOT(updatePicture()));
 	currTimer->start(1000);
 }
-void VideoTestItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *wdg)
+
+void VideoTestScene::drawBackground ( QPainter * painter, const QRectF & rect )
 {
-	qWarning() << __func__ << "VideoTestItem called";
-	V3dfxGLItem::paint(painter, item, wdg);
+	qWarning() << __func__ << "VideoTestScene called";
+	V3dfxGLScene::drawBackground(painter, rect);
 }
 
-void VideoTestItem::updatePicture()
+void VideoTestScene::updatePicture()
 {
-	qWarning() << __func__ << "VideoTestItem called";
+	qWarning() << __func__ << "VideoTestScene called";
 	update();
 	if(numTimes ++ > MAX_ITER_COUNT) QApplication::quit();
 }

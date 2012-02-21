@@ -10,7 +10,7 @@ This implementation provides V3dfxGLWidget in libv3dfx_qt.so,
 that can be used by other Qt applications.
 
 STATUS:
-Working (drawing inside the QGLWidget class). TODO move this to app calls
+Working (the QGLWidget class).
 
 DEPENDENCIES:
 

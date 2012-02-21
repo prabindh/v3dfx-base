@@ -4,9 +4,10 @@ README for v3dfx-base-test [PLATFORM - QT] test application
 INTRODUCTION:
 
 This implementation tests video streaming functionality 
-via SGX GPU, using V3dfxGLWidget. This draws YUV data into
-a GraphicsView, with V3dfxGLWidget as a ViewPort. Other forms
-of usage of V3dfxGLWidget are possible, but not tested or supported
+via SGX GPU, using V3dfxGLScene. This draws YUV data into
+a GraphicsView, with V3dfxGLScene, and updates data in the 
+drawBackground() call. Other forms
+of usage of V3dfxGLScene are possible, but not tested or supported
 
 DEPENDENCIES:
 
@@ -17,31 +18,7 @@ DEPENDENCIES:
 
 STATUS:
 
-a) with the QGraphicsItem base class, with a QGLWidget set as base class to the GraphicsScene, below errors - ie, after first draw, glerror - suspecting program context switches.
-About to BCIOSET_BUFFERADDR 86f62000                                            
-Completed BCIOSET_BUFFERADDR 86f62000                                           
-About to BCIOSET_BUFFERADDR 86fa2000                                            
-Completed BCIOSET_BUFFERADDR 86fa2000                                           
-glgeterror after q = 0                                                          
-glgeterror after draw = 0                                                       
-updatePicture VideoTestItem called                                              
-boundingRect V3dfxGLItem called                                                 
-boundingRect V3dfxGLItem called                                                 
-boundingRect V3dfxGLItem called                                                 
-paint VideoTestItem called                                                      
-paint V3dfxGLItem called                                                        
-boundingRect V3dfxGLItem called                                                 
-init 4                                                                          
-currAddress in test20_process_one = 45d35000                                    
-About to BCIOSET_BUFFERADDR 86f62000                                            
-Completed BCIOSET_BUFFERADDR 86f62000                                           
-About to BCIOSET_BUFFERADDR 86fa2000                                            
-Completed BCIOSET_BUFFERADDR 86fa2000                                           
-glgeterror after q = 0                                                          
-glgeterror after draw = 502                                          
-
-b) with QGLWidget base class directly, work ongoing
-
+a) with the QGraphicsItem base class, with a QGLWidget set as base class to the GraphicsScene, below errors - ie, after first draw, glerror - suspecting program context switches. Move the changes made in QGLWidget implementation back to this.
 
 TESTING:
 

@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Implementation for v3dfxbase (Qt - QGLWidget based)
+ *   Implementation for v3dfxbase (Qt - QGraphicsScene based)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -35,108 +35,129 @@
  * Contact: prabu@ti.com
  ****************************************************************************/
 
-#include "v3dfx_qtqgl.h"
+#include "v3dfx_qt.h"
 #include <QtCore/QtDebug>
 #include <QtOpenGL>
 
-extern int qt_program_setup(int testID);
-extern void qt_program_cleanup(int testID);
-extern int allocate_v3dfx_imgstream_bufs(int numbufs);
-extern void deallocate_v3dfx_imgstream_bufs();
-extern void test8();
-extern void test20_init();
-extern void test20_process_one(int currIteration);
-extern void test20_deinit();
-
-
-static int curritercount = 0;
-
-#define MAX_ITER_COUNT 10
-
-V3dfxGLWidget::V3dfxGLWidget(QWidget *parent)
-    : QWidget(parent)
+V3dfxGLScene::V3dfxGLScene(QGraphicsScene *parent)
+    : QGraphicsScene(parent)
 {
 	qWarning() << __func__ << "constructor called";
 	currColor = 0;
 	initialised = 0;
 }
 
-V3dfxGLWidget::~V3dfxGLWidget()
+V3dfxGLScene::~V3dfxGLScene()
 {
 	qWarning() << __func__ << " destructor called";
 }
 
-int V3dfxGLWidget::init()
+void V3dfxGLScene::drawBackground ( QPainter * painter, const QRectF & rect )
 {
-	int err;
+	qWarning() << __func__ << "V3dfxGLScene called";
 
-	if(curritercount >= MAX_ITER_COUNT) goto completed; //do it only for MAX_ITER_COUNT times
-
-	if(initialised == 0 && curritercount == 0) 
+	if (painter->paintEngine()->type() != 
+		QPaintEngine::OpenGL) 
 	{
-		err = qt_program_setup(8);
-	qWarning() << __func__ << "1";
-		if(err) 
-		{
-			qt_program_cleanup(8);		
-			goto completed;
-		}
-		/* GL_IMG_texture_stream - via v3dfxbase */
-		allocate_v3dfx_imgstream_bufs(2); //2 buffers
-	qWarning() << __func__ << "2";
-		test20_init();
-	qWarning() << __func__ << "3";
-		initialised = 1;
+		qWarning("Error: QGLWidget is not set as viewport for the view.");
+		return;
 	}
-
-	if(curritercount < MAX_ITER_COUNT)
-	{
-	qWarning() << __func__ << "4";
-		test20_process_one(curritercount);
-		curritercount ++;
-		//swap buffers will be done by framework itself after paint call
-	}
-	else
-	{
-		test20_deinit();
-		deallocate_v3dfx_imgstream_bufs();
-		qt_program_cleanup(8);
-		return 0;
-	}
-completed:
-	return 0;
+	//Do drawing here
 }
 
-void V3dfxGLWidget::paintGL(
-	QPainter * painter, 
-	const QStyleOptionGraphicsItem * option, 
-	QWidget * widget = 0)
+/************* Function Implementations ******************/
+int V3dfxGLScene::initV3dFx(
+		int streamingType,/*! IMGSTREAM, EGLIMAGE */
+		void* attrib, /* Attribute structure based on type */
+		int deviceId, /* Device # applicable to IMGSTREAM */
+		unsigned long *paArray /*! Array of buffers */
+		)
 {
-	option = 0;
-	widget = 0;
+	int err = 0;
+	//TODO define enums
+	if(streamingType == 0) //imgstream
+	{
+		deviceClass = new TISGXStreamIMGSTREAMDevice();
+		texClass = new TISGXStreamTexIMGSTREAM();		
+	}
+	else if (streamingType == 1)
+	{
+		deviceClass = new TISGXStreamEGLIMAGEDevice();
+		texClass = new TISGXStreamTexEGLIMAGE();	
+	}
+	else 
+	{
+		return 1;
+	}
+	if(!deviceClass || !texClass)
+	{
+		return 2;
+	}
 
-	qWarning() << __func__ << "V3dfxGLWidget called";
+	currDeviceType = streamingType;
+	currDeviceId = deviceId;
 
-	currColor += 0.01f;
-	if(currColor > 1.0f) currColor = 0;
+	err = deviceClass->init(attrib, deviceId, paArray);
+	if(err)
+	{
+		return err;
+	}
+	err = texClass->init(deviceId);
+	if(err)
+	{
+		return err;
+	}
+}
 
-	painter->drawRect(boundingRect());
-	painter->beginNativePainting();
+int V3dfxGLScene::qTexImage2DBuf(void* fullBufPhyAddrArray)
+{
+	return deviceClass->qTexImage2DBuf(fullBufPhyAddrArray);
+}
+void V3dfxGLScene::signal_draw(int texIndex)
+{
+	return deviceClass->signal_draw(texIndex);
+}
 
-	//All glcode has to be inside this block 
-	glClearColor(currColor, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+int V3dfxGLScene::dqTexImage2DBuf(void* freeBufPhyAddrArray)
+{
+	return deviceClass->dqTexImage2DBuf(freeBufPhyAddrArray);
+}
+int V3dfxGLScene::load_v_shader(char const* vshader)
+{ 
+	return texClass->load_v_shader(vshader);
+}
+int V3dfxGLScene::load_f_shader(char const* fshader)
+{ 
+	return texClass->load_f_shader(fshader);
+}
+int V3dfxGLScene::load_program()
+{
+	return texClass->load_program(); 
+}
+int V3dfxGLScene::use_program()
+{ 
+	texClass->use_program();
+}
 
-	init();
+int V3dfxGLScene::release_program()
+{ 
+	return texClass->release_program();
+}
 
-	//End gl code	 
-	painter->endNativePainting();
+int V3dfxGLScene::get_attrib_location(char const* attribname)
+{ 
+	return texClass->get_attrib_location(attribname);
+}
+int V3dfxGLScene::get_uniform_location(char const* uniformname)
+{ 
+	return texClass->get_uniform_location(uniformname);
+}
+int V3dfxGLScene::destroy()
+{ 
+	return deviceClass->destroy();
 }
 
 
-QRectF V3dfxGLWidget::boundingRect () const
-{
-	qWarning() << __func__ << "V3dfxGLWidget called";
-	return QRectF(20,20,256, 256);
-}
+
+
 

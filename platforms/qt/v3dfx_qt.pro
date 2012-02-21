@@ -1,8 +1,6 @@
 #****************************************************************************
-# *   Preliminary Qt implementation for v3dfxbase
+# *   Preliminary Qt implementation for v3dfxbase (QGraphicsScene based)
 #****************************************************************************
-
-VERSION = 0.2
 
 TEMPLATE = lib
 TARGET = v3dfxqt
@@ -38,3 +36,4 @@ INCLUDEPATH += ../../../../ti-dvsdk_dm3730-evm_04_03_00_06/linuxutils_2_26_02_05
 SOURCES += v3dfx_qt_imgstream.cpp
 SOURCES += ../../test/imgstream/sgxperf_test8.cpp
 
+HEADERS += "../../api/include/v3dfxbase.h"

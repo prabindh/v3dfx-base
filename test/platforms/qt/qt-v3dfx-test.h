@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Preliminary Qt test code for v3dfxbase
+ *   Preliminary Qt test code for v3dfxbase (GraphicsScene based)
  *
  * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
  *
@@ -37,22 +37,18 @@
 #ifndef QT_V3DFX_TEST_H
 #define  QT_V3DFX_TEST_H
 
-#include <QGraphicsItem>
-
 #include "v3dfx_qt.h" //Base class for video streaming extensions
 
-class VideoTestItem : public V3dfxGLItem
+class VideoTestScene : public V3dfxGLScene
 {
 Q_OBJECT
 private:
 	QTimer *currTimer;
 public:
-	VideoTestItem(QGraphicsItem *parent = 0);
+	VideoTestScene(QGraphicsScene *parent = 0);
 public slots:
 	void updatePicture();
 protected:
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-	       QWidget *widget);
+	void drawBackground ( QPainter * painter, const QRectF & rect );
 };
-
 #endif
