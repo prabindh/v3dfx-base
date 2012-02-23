@@ -111,6 +111,8 @@ int V3dfxGLWidget::initV3dFx(
 	{
 		return err;
 	}
+
+	return 0;
 }
 
 int V3dfxGLWidget::qTexImage2DBuf(void* fullBufPhyAddrArray)
@@ -140,7 +142,7 @@ int V3dfxGLWidget::load_program()
 }
 int V3dfxGLWidget::use_program()
 { 
-	texClass->use_program();
+	return texClass->use_program();
 }
 
 int V3dfxGLWidget::release_program()
