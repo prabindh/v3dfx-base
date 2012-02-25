@@ -65,6 +65,11 @@ void V3dfxGLScene::drawBackground ( QPainter * painter, const QRectF & rect )
 	//Do drawing here
 }
 
+QRectF V3dfxGLScene::boundingRect() const
+{
+    return QRectF(-150, -150, 600, 600);
+}
+
 /************* Function Implementations ******************/
 int V3dfxGLScene::initV3dFx(
 		int streamingType,/*! IMGSTREAM, EGLIMAGE */

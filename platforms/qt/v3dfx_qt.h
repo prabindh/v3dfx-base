@@ -57,6 +57,7 @@ private:
 public:
 	V3dfxGLScene(QGraphicsScene *parent = 0);
 	~V3dfxGLScene();
+	virtual QRectF boundingRect() const;
 	int initV3dFx(
 		int streamingType,/*! IMGSTREAM, EGLIMAGE */
 		void* attrib, /* Attribute structure based on type */
@@ -78,6 +79,5 @@ public:
 protected:
 	//QGraphicsScene paint
 	virtual void drawBackground ( QPainter * painter, const QRectF & rect );
-	virtual QRectF boundingRect () const;
 };
 #endif

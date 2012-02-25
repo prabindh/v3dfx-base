@@ -60,6 +60,16 @@ int main(int argc, char **argv)
 
 	view.show();
 
+/* TODO: Something like the below has to be done to include Phonon/gstreamer
+	
+	Phonon::VideoPlayer *videoPlayer = 
+		new Phonon::VideoPlayer(Phonon::VideoCategory, this);
+	videoPlayer->play(Phonon::MediaSource(INPUT_FILE));
+
+*/
+
+
+
 	return app.exec();
 }
 

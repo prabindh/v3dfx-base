@@ -44,8 +44,11 @@ class VideoTestScene : public V3dfxGLScene
 Q_OBJECT
 private:
 	QTimer *currTimer;
+	int init();
 public:
 	VideoTestScene(QGraphicsScene *parent = 0);
+	~VideoTestScene();
+	QRectF boundingRect() const;
 public slots:
 	void updatePicture();
 protected:
