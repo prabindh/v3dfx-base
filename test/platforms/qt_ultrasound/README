@@ -1,0 +1,56 @@
+README for v3dfx-base-test [PLATFORM - QT] test application (Ultrasound)
+================================================================
+
+INTRODUCTION:
+
+This implementation tests video/image streaming functionality 
+via SGX GPU, using V3dfxGLScene, for an Ultrasound image viewer. This application
+draws data into a GraphicsView, with V3dfxGLScene, and updates data in the 
+drawBackground() call. 
+
+This application showcases the capability of v3dfx-base, with ARGB input, and 
+with multiple blending, all with <10% CPU loading. With a regular glTexImage2D mode
+of texturing, this would take 100% CPU, and lower fps rates.
+
+
+- Input.img contains a real ultrasound scan of a Foot.
+- There are 128 layers of images, each image being of 128 x 128 size.
+- These are luminosity images (single byte), and show each layer of the foot with a variation of light intensity
+- To make it easier to work with v3dfx-base, this image is upsampled to an ARGB format
+- The 128 layers are then blended in a texture-draw-blend cycle to obtain the final rendered image
+      ________
+   ___|___   |
+   |     |   |
+------   |   |
+|    |   |___|
+|    |___|
+|    |
+------
+
+DEPENDENCIES:
+
+=> Qt built with -opengl es2 option
+=> TI Graphics SDK with imgstream and/or eglimage extension support
+=> v3dfx base-class should have been built (v3dfx-base.a)
+=> V3dfxGLScene should be built (/platforms/qt)
+
+STATUS:
+
+Ok
+
+TESTING:
+
+==> Tested on Qt4.8 QWS, on DM3730 EVM
+
+STEPS:
+
+1. Update qt-v3dfx-base-test.pro as required (paths)
+
+2. Use qmake to generate the Qt makefile for this project, as below
+
+~/work1/arm-qt/qt-everywhere-opensource-src-4.8.0/bin/qmake -o Makefile qt-v3dfx-base-test.pro
+
+3. make && make install
+
+4. Test this using qt-v3dfx-base-test
+
