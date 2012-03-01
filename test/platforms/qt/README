@@ -1,4 +1,4 @@
-README for v3dfx-base-test [PLATFORM - QT] test application
+README for v3dfx-base-test [PLATFORM - QT] test application (GraphicsView based)
 ================================================================
 
 INTRODUCTION:
@@ -14,11 +14,11 @@ DEPENDENCIES:
 => Qt built with -opengl es2 option
 => TI Graphics SDK with imgstream and/or eglimage extension support
 => v3dfx base-class should have been built (v3dfx-base.a)
-=> V3dfxGLWidget should be built (/platforms/qt)
+=> V3dfxGLScene should be built (/platforms/qt)
 
 STATUS:
 
-a) with the QGraphicsItem base class, with a QGLWidget set as base class to the GraphicsScene, below errors - ie, after first draw, glerror - suspecting program context switches. Move the changes made in QGLWidget implementation back to this.
+a) Ok
 
 TESTING:
 
