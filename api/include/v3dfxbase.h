@@ -88,7 +88,7 @@ This class creates and manages one streaming device
 - will NOT do vertex loading
 - will NOT do draw calls.
 */
-#define MAX_BUFFERS_PER_STREAM 10
+#define MAX_BUFFERS_PER_STREAM 128
 
 typedef struct __bufferstate
 {
