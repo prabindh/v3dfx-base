@@ -57,9 +57,9 @@ void V3dfxGLScene::drawBackground ( QPainter * painter, const QRectF & rect )
 	qWarning() << __func__ << "V3dfxGLScene called";
 
 	if (painter->paintEngine()->type() != 
-		QPaintEngine::OpenGL) 
+		QPaintEngine::OpenGL2) 
 	{
-		qWarning("Error: QGLWidget is not set as viewport for the view.");
+		qWarning("Error: QGLWidget is not set as viewport for the view. Or OpenGLES2 is not being used, needed for v3dfx-base!");
 		return;
 	}
 	//Do drawing here
