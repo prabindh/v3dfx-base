@@ -9,7 +9,7 @@ via SGX GPU, wrapped in a Qt GraphicsScene
 This implementation provides QGraphicsScene in libv3dfx_qt.so, 
 that can be used by other Qt applications (GraphicsView based)
 
-STATUS - not working
+STATUS - working
 
 DEPENDENCIES:
 
