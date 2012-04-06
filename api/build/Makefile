@@ -1,6 +1,7 @@
 # Makefile to build v3dfx-base.a core library (static)
 # Invoke as below
 #   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_05_00_03/ make
+#   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_06_00_01/ make
 # prabu@ti.com 2012
 
 .phony: clean
@@ -11,17 +12,22 @@ PLAT_CC  = $(CROSS_COMPILE)gcc
 PLAT_CPP = $(CROSS_COMPILE)g++
 PLAT_AR  = $(CROSS_COMPILE)ar
 
+#Requires Graphics SDK 4.06 or beyond with eglimage support
+_ENABLE_EGLIMAGE := 1
+
+
 COMMON_INCLUDES := $(addprefix -I, \
 		$(GFXSDKDIR)/GFX_Linux_KM/services4/3rdparty/bufferclass_ti \
 		$(GFXSDKDIR)/GFX_Linux_KM/include4 \
 		$(GFXSDKDIR)/include/OGLES2 \
 		../include )
 AR_FLAGS := rcs
-CC_FLAGS := -Wall -DRELEASE -O2 $(COMMON_INCLUDES)
 
+ifeq ($(_ENABLE_EGLIMAGE),1)
+	EGLIMAGE_FLAGS="-D_ENABLE_EGLIMAGE"
+endif
 
-_ENABLE_EGLIMAGE := 0
-
+CC_FLAGS := -Wall -DRELEASE -O2 $(COMMON_INCLUDES) $(EGLIMAGE_FLAGS)
 
 API_CPP_FILES := $(wildcard ../src/*.cpp)
 API_OBJ_FILES := $(patsubst %.cpp,%.o,$(API_CPP_FILES))

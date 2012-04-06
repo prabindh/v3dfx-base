@@ -74,10 +74,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-//#include <EGL/new/drveglext.h>
-//#include <EGL/new/drvgl2ext.h>
-//#include <EGL/new/imgextensions.h>
-
 #include <fcntl.h>
 #include "sys/ioctl.h"
 #include <unistd.h>

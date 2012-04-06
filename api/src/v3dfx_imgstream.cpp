@@ -252,7 +252,7 @@ int TISGXStreamIMGSTREAMDevice::dqTexImage2DBuf(void* freeBufPhyAddr)
 		if(bufferState[bcount].state == 0)
 		{
 			paArray[bcount] = bufferState[bcount].pa;
-			bufferState[bcount].pa = NULL;
+			bufferState[bcount].pa = 0;
 		}
 	}
 	return 0;

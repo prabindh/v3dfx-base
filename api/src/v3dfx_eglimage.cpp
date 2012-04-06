@@ -153,8 +153,6 @@ int TISGXStreamEGLIMAGEDevice::dqTexImage2DBuf(void* freeBufPhyAddr)
 }
 
 
-
-
 TISGXStreamTexEGLIMAGE::TISGXStreamTexEGLIMAGE() {}
 TISGXStreamTexEGLIMAGE::~TISGXStreamTexEGLIMAGE() {}
 int TISGXStreamTexEGLIMAGE::init(int streamDeviceId)
