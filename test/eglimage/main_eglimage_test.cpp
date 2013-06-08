@@ -76,6 +76,7 @@ extern int inTextureWidth;
 extern int inTextureHeight;
 extern int inNumberOfObjectsPerSide;
 extern int physicalAddress;
+extern int virtualAddress;
 extern EGLSurface eglSurface;
 /********************************************************************
 TEST21 - with v3dfxbase classes
@@ -84,7 +85,7 @@ TISGXStreamTexEGLIMAGE* texClass;
 TISGXStreamEGLIMAGEDevice* deviceClass;
 
     EGLint eglAttributes[] = {
-            EGL_GL_VIDEO_FOURCC_TI,      FOURCC_STR("UYVY"),
+            EGL_GL_VIDEO_FOURCC_TI,      FOURCC_STR("YUYV"),
             EGL_GL_VIDEO_WIDTH_TI,       inTextureWidth,
             EGL_GL_VIDEO_HEIGHT_TI,      inTextureHeight,
             EGL_GL_VIDEO_BYTE_STRIDE_TI, inTextureWidth,
@@ -98,7 +99,7 @@ TISGXStreamEGLIMAGEDevice* deviceClass;
 eglimage_device_attributes tempAttrib = {inTextureWidth, inTextureHeight, 2, 
 					inTextureWidth*inTextureHeight*2, 
 				PVRSRV_PIXEL_FORMAT_YUV420,
-					eglDisplay,
+					0, //to be initialised
 					eglAttributes, 1};
 int lastDeviceClass = 0;
 
@@ -121,7 +122,8 @@ void test21_eglimagekhr()
 
 	test_eglimagekhr_init_texture_streaming();
 
-	paArray[0] = physicalAddress;
+	paArray[0] = virtualAddress;//physicalAddress;
+	tempAttrib.egldisplay = eglDisplay;
 	deviceClass->init(&tempAttrib, lastDeviceClass, paArray);
 	texClass->init(lastDeviceClass);
 	texClass->load_v_shader(NULL);
