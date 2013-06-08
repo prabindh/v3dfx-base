@@ -2,11 +2,10 @@
 # Invoke as below
 #   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_05_00_03/ make
 #   PATH=/home/prabindh/ti-dvsdk_dm3730-evm_04_03_00_06/linux-devkit/bin:$PATH GFXSDKDIR=/home/prabindh/Graphics_SDK_4_06_00_01/ make
-# prabu@ti.com 2012
+#   PATH="/opt/linaro/gcc-linaro-arm-linux-gnueabi-2012.03-20120326_linux/bin/:$PATH" CROSS_COMPILE=arm-linux-gnueabi- GFXSDKDIR=/home/prabindh/Graphics_SDK_4_08_00_01 make
+# prabu@ti.com 2013
 
 .phony: clean
-
-CROSS_COMPILE = arm-arago-linux-gnueabi-
 
 PLAT_CC  = $(CROSS_COMPILE)gcc
 PLAT_CPP = $(CROSS_COMPILE)g++
