@@ -2,11 +2,14 @@ Base classes for v3dfx with unified backend support for eglimage and imgstream. 
 
 
 REQUIREMENTS:
-- Graphics SDK later than 4.05.xx.xx
+- Graphics SDK later than 4.08.xx.xx
 - Platform that supports a method to allocate contiguous bufferrs (preferably but not required in eglimage case)
 
 BUILD STEPS:
-XXXXgcc -I/<>/Graphics_SDK_4_05_00_03/include/OGLES2 -I/<>/Graphics_SDK_4_05_00_03/GFX_Linux_KM/include4 main_v3dfx_imgstream.cpp -lGL -lEGL -o sgxperf_test20
+
+Building is a 2 step process - First build the api library (static .a) and then build the test applications.
+
+Refer to the individual makefiles for build documentation
 
 EXECUTION STEPS:
 Boot steps - allow for CMEM
@@ -36,4 +39,7 @@ Feb 2012:
 Feb 2012:
 - Validated imgstream
 - Created Qt template
+
+June 2013:
+- Validated with eglImage on Graphics SDK 4.08* and with AM335x EVM-SK
 
