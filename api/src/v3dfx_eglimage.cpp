@@ -113,7 +113,7 @@ int TISGXStreamEGLIMAGEDevice::initialise_eglimage_gl(unsigned long *paArray)
 					);
 		if (eglImage == EGL_NO_IMAGE_KHR) 
 		{
-			LOG_V3DFX_BASE("%s Error in eglCreateImageKHR\n", __func__);
+			LOG_V3DFX_BASE("%s\n returned %d Error in eglCreateImageKHR, egldisplay = %d\n, paArray = %x\n", __func__,eglGetError(), attributes.egldisplay, paArray[paCount]);			
 			return 2;
 		}
 		glGenTextures(1, &newTexObjectId);
