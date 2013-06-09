@@ -102,20 +102,20 @@ class TISGXStreamEGLIMAGEDevice : public TISGXStreamDeviceBase
 {
 	eglimage_device_attributes attributes;
 	unsigned int eglImageTextureObjectIds[MAX_BUFFERS_PER_STREAM];
-	int initialise_eglimage_gl(unsigned long *paArray);
+	int initialise_eglimage_gl(unsigned long *vaArray);
 public:
 	TISGXStreamEGLIMAGEDevice();
 	~TISGXStreamEGLIMAGEDevice();
-	/*! deviceId is immaterial, but paArray is needed. 
-	paArray - Array of physical addresses NULL terminated
+	/*! deviceId is immaterial, but vaArray is needed. 
+	vaArray - Array of virtual addresses NULL terminated
 	*/
-	int init(void* attrib, int deviceId, unsigned long *paArray);
+	int init(void* attrib, int deviceId, unsigned long *vaArray);
 	/*! Send a buffer for texturing.
 	NOTE - this buffer is not released immediately.
 	Use dq to get next free buffer. */
-	int qTexImage2DBuf(void* fullBufPhyAddr);
+	int qTexImage2DBuf(void* fullBufVirtAddr);
 	/*! Get next free buffer for loading new data */
-	int dqTexImage2DBuf(void* freeBufPhyAddr);
+	int dqTexImage2DBuf(void* freeBufVirtAddr);
 	/*! Tear down */
 	int destroy();
 };
