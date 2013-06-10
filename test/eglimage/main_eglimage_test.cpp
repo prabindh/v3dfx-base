@@ -88,7 +88,7 @@ TISGXStreamEGLIMAGEDevice* deviceClass;
             EGL_GL_VIDEO_FOURCC_TI,      FOURCC_STR("YUYV"),
             EGL_GL_VIDEO_WIDTH_TI,       inTextureWidth,
             EGL_GL_VIDEO_HEIGHT_TI,      inTextureHeight,
-            EGL_GL_VIDEO_BYTE_STRIDE_TI, inTextureWidth,
+            EGL_GL_VIDEO_BYTE_STRIDE_TI, inTextureWidth*2,
             EGL_GL_VIDEO_BYTE_SIZE_TI,   inTextureWidth*inTextureHeight*2,
             // TODO: pick proper YUV flags..
             EGL_GL_VIDEO_YUV_FLAGS_TI,   EGLIMAGE_FLAGS_YUV_CONFORMANT_RANGE |
@@ -116,6 +116,7 @@ usage of v3dfx-base
 void test21_eglimagekhr()
 {
 	int matrixLocation;
+	int eglimageLoopCnt = 0;
 	deviceClass = new TISGXStreamEGLIMAGEDevice();
 	texClass = new TISGXStreamTexEGLIMAGE();
 
@@ -123,6 +124,7 @@ void test21_eglimagekhr()
 	test_eglimagekhr_init_texture_streaming();
 
 	paArray[0] = virtualAddress;//physicalAddress;
+
 	tempAttrib.egldisplay = eglDisplay;
 	deviceClass->init(&tempAttrib, lastDeviceClass, paArray);
 	texClass->init(lastDeviceClass);
@@ -130,6 +132,8 @@ void test21_eglimagekhr()
 	texClass->load_f_shader(NULL);
 	texClass->load_program();
 	matrixLocation = texClass->get_uniform_location("MVPMatrix");
+	printf("glError = %x after init \n", glGetError());
+	printf("eglError = %x after init \n", eglGetError());
 
 	set_mvp(matrixLocation);
 
@@ -139,15 +143,21 @@ void test21_eglimagekhr()
 	common_init_gl_texcoords(inNumberOfObjectsPerSide, &pTexCoordArray);
 
 	//Rendering loop
-	glClear(GL_COLOR_BUFFER_BIT);
-	deviceClass->qTexImage2DBuf(&paArray);
+	
+	for(eglimageLoopCnt = 0;eglimageLoopCnt < 100; eglimageLoopCnt ++)
+	{
+		memset((void*)paArray[0], eglimageLoopCnt, sizeof(inTextureWidth*inTextureHeight*2));
+		glClear(GL_COLOR_BUFFER_BIT);
+		deviceClass->qTexImage2DBuf(&paArray);
+		printf("glError = %x after queing \n", glGetError());
 
-	common_gl_draw(inNumberOfObjectsPerSide);
-	common_eglswapbuffers (eglDisplay, eglSurface);
+		common_gl_draw(inNumberOfObjectsPerSide);
+		printf("glError = %x after drawing \n", glGetError());
+		common_eglswapbuffers (eglDisplay, eglSurface);
 
-	deviceClass->signal_draw(0); //only 1 buffer
-	deviceClass->dqTexImage2DBuf(&freeArray);
-
+		deviceClass->signal_draw(0); //only 1 buffer
+		deviceClass->dqTexImage2DBuf(&freeArray);
+	}
 	deviceClass->destroy();
 
 	test_eglimagekhr_deinit_texture_streaming();
